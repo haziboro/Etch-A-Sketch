@@ -1,6 +1,8 @@
 const grid = document.querySelector('.grid');
 const defaultGridsize = 16;
-let gridType = MakeDarker;
+let currentGridSize;
+let gridTypes = [MakeBlack, MakeRandomColor, MakeDarker];
+let gridType = gridTypes[2];
 
 function MakeRandomColor(e){
     let block = e.target;
@@ -25,6 +27,7 @@ function MakeDarker(e){
 }//end MakeDarker
 
 function GenerateGrid(gridSize){
+    currentGridSize = gridSize;
     ResetGrid();
     const itemSize = 100/gridSize;
 
@@ -63,8 +66,24 @@ function GetGridsize(){
     }//end while
 }//end GetGridSize
 
+function SetGridType(e){
+    gridType = gridTypes[e.target.dataGridType];
+    GenerateGrid(currentGridSize);
+}//end SetGridType
+
 const resetButton = document.querySelector('.reset');
 resetButton.addEventListener('click', GetGridsize);
 
+const typeButtons = document.querySelector('.typeButtons');
+//Populates buttons for to activate every grid mode available
+for(let i = 0; i < gridTypes.length; i++){
+    let button = document.createElement('button');
+    button.classList.add('gridType-Button');
+    button.dataGridType = i;
+    button.textContent = gridTypes[i].name;
+    button.addEventListener('click', SetGridType);
+    typeButtons.appendChild(button);
+}
 
+gridType = gridTypes[0];
 GenerateGrid(defaultGridsize);
